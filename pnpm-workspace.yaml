@@ -1,0 +1,4 @@
+minimumReleaseAgeExclude:
+  - pnpm
+
+engineStrict: true

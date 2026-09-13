@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: lts/*
+
+      - name: Install pnpm
+        run: npm install --global pnpm@12.3.4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check types
+        run: pnpm run check-types
+
+      - name: Run formatter
+        run: pnpm run format
+
+      - name: Run linters
+        run: |
+          set +e
+          pnpm exec knip
+          knip_exit_code=$?
+          set -e
+
+          if [ "$knip_exit_code" -eq 1 ] || [ "$knip_exit_code" -eq 2 ]; then
+            exit "$knip_exit_code"
+          fi
+
+          pnpm exec eslint .
+
+      - name: Run tests
+        run: pnpm run test
