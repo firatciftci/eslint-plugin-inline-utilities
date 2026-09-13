@@ -41,5 +41,5 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Stage NPM package
+      - name: Publish to npm
         run: pnpm publish --access public --no-git-checks
