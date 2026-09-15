@@ -67,7 +67,7 @@ const MARKUP_BOUNDARIES = new Set([
 
 const GROUPED_VALUE = /\[[^\]]*\]|\([^)]*\)/g;
 const UTILITY_MARKER = /[-:[/]/;
-const UTILITY_TOKEN = /^[\d!#$%&*+./:>@_a-z~-]+$/;
+const UTILITY_TOKEN = /^(?=.*[a-z])[\d!#$%&*+./:>@_a-z~-]+$/;
 const WHITESPACE = /\s/;
 
 /**
@@ -75,7 +75,9 @@ const WHITESPACE = /\s/;
  * which Tailwind v4 and UnoCSS both let a project extend. Bare utilities such
  * as `grid`, `relative` and `isolate` are indistinguishable from prose, so
  * this asks only for two or more lowercase, space-free tokens with at least
- * one carrying utility punctuation.
+ * one carrying utility punctuation. Every token needs a letter, which keeps
+ * out the punctuation a template literal leaves between its expressions, such
+ * as the two hyphens in `` `${name}-${x}-${y}` ``.
  *
  * Arbitrary values are stripped first, because a comma or a paren outside
  * `[...]` or `(...)` never appears in a real class token. That keeps out the
@@ -297,7 +299,7 @@ export const noClassConstants: Rule.RuleModule = {
         if (asNode(node).parent?.type === "TaggedTemplateExpression") return;
         const text = node.quasis
           .map((quasi) => quasi.value.cooked ?? quasi.value.raw)
-          .join(" ");
+          .join("");
         if (isUtilityCluster(text)) check(asNode(node), text);
       },
     };

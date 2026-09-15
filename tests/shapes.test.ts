@@ -64,6 +64,29 @@ export const FIELDS = "user.email user.name"; // OK
 export const GREETING = "some words here"; // OK`,
   },
   {
+    name: "spares a key or file name built from expressions",
+    filename: "t.ts",
+    parser: parsers.ts,
+    code: `export function cardKey(name: string, x: number, y: number): string {
+  return \`\${name}-\${x}-\${y}\`; // OK
+}
+export function fileName(part: string, stamp: string): string {
+  return \`\${part}-\${stamp}.png\`; // OK
+}
+export function meta(locale: string) {
+  return { images: \`/images/og-image-\${locale}.png\` }; // OK
+}
+export function plane(uuid: string, index: number) {
+  return { layerId: \`plane-\${uuid}-\${index}\` }; // OK
+}
+export const metadata = {
+  title: { template: \`%s - \${label}\`, default: label }, // OK
+};
+export function dayKey(year: number, month: string) {
+  return \`\${year}-\${month}-01\`; // OK
+}`,
+  },
+  {
     name: "keeps variant-only clusters on the reference-proven path",
     filename: "t.svelte",
     parser: parsers.svelte,
