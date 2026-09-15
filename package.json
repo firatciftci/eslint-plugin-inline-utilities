@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-inline-utilities",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "license": "MIT",
   "description": "ESLint rules that keep utility classes on the element they style, for Tailwind CSS, UnoCSS and Master CSS",
